@@ -1,6 +1,7 @@
 package com.example.cvkinematics;
 
-import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +25,13 @@ public class MainActivity extends AppCompatActivity implements CameraStart, File
     }
 
     @Override
-    public void fileStart() {
+    public void fileStart(Uri video) {
         getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.container,
-                new FileFragment()).commit();
+                FileFragment.newInstance(video)).commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

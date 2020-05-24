@@ -13,29 +13,22 @@
         android:gravity="center"
         android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/file_button"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center"
-            android:text="Camera without opencv" />
+        <VideoView
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:id="@+id/videoView"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true" />
 
         <Button
-            android:id="@+id/camera_button"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center"
-            android:text="Camera" />
-
-        <Button
-            android:id="@+id/first_video_button"
+            android:id="@+id/video_button"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center"
             android:text="Video" />
+
 
     </LinearLayout>
 </LinearLayout>
