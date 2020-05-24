@@ -3,8 +3,13 @@ package com.example.cvkinematics;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Pair;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.opencv.core.Point;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements CameraStart, FileStart {
 
@@ -22,6 +27,12 @@ public class MainActivity extends AppCompatActivity implements CameraStart, File
     public void cameraStart() {
         getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.container,
                 new CameraFragment()).commit();
+    }
+
+    @Override
+    public void getChart(ArrayList<Pair<Integer, Integer>> points) {
+        getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.container,
+                ChartFragment.newInstance(points)).commit();
     }
 
     @Override

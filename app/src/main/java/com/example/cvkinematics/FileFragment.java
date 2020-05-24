@@ -100,6 +100,4 @@ public class FileFragment extends Fragment {
         return fileFragment;
     }
 
-
-
 }

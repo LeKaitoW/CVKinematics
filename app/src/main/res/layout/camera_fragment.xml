@@ -9,4 +9,12 @@
         android:layout_height="match_parent"
         android:id="@+id/color_blob_detection_activity_surface_view" />
 
+    <Button
+        android:id="@+id/video_stop"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="Stop" />
+
 </FrameLayout>

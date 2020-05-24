@@ -1,7 +1,15 @@
 package com.example.cvkinematics;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.util.Pair;
+import android.view.LayoutInflater;
+import android.view.SurfaceView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -9,35 +17,23 @@ import androidx.fragment.app.FragmentActivity;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
-import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
-import org.opencv.core.Range;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View.OnTouchListener;
-import android.view.SurfaceView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Toast;
-
-import java.util.List;
+import java.util.ArrayList;
 
 public class CameraFragment extends Fragment implements CvCameraViewListener2 {
     private static final String  TAG              = "CameraFragment";
+    private ArrayList<Pair<Integer, Integer>> points = new ArrayList<Pair<Integer, Integer>>();
 
-    private JavaCameraView mOpenCvCameraView;
+    private CameraBridgeViewBase mOpenCvCameraView;
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(getActivity()) {
         @Override
         public void onManagerConnected(int status) {
@@ -74,6 +70,12 @@ public class CameraFragment extends Fragment implements CvCameraViewListener2 {
         mOpenCvCameraView = view.findViewById(R.id.color_blob_detection_activity_surface_view);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
+        View camera = view.findViewById(R.id.video_stop);
+        camera.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ((CameraStart)getActivity()).cameraStart();
+            }
+        });
     }
 
     @Override
@@ -130,8 +132,6 @@ public class CameraFragment extends Fragment implements CvCameraViewListener2 {
                 int radius = (int) circleVec[2];
                 int cols = mRGBa.cols();
                 int rows = mRGBa.rows();
-                int xOffset = (mOpenCvCameraView.getWidth() - cols) / 2;
-                int yOffset = (mOpenCvCameraView.getHeight() - rows) / 2;
                 Rect roi = new Rect();
                 int x_rec = (int) (circleVec[0]-circleVec[2]/2);
                 int y_rec = (int) (circleVec[1]-circleVec[2]/2);
@@ -143,11 +143,6 @@ public class CameraFragment extends Fragment implements CvCameraViewListener2 {
                 roi.height = (y_rec+4 < rows) ? y_rec + 4 - roi.y : rows - roi.y;
 
                 Imgproc.rectangle(input, new Point(roi.x, roi.y), new Point(roi.x+roi.width, roi.y+roi.height),new Scalar(255, 255, 255));
-
-                //roi.x = x_rec < 0 ? 0 : x_rec;
-                //roi.y = y_rec < 0 ? 0 : y_rec;
-                //roi.width = (int)circleVec[2]*2;
-               // roi.height = (int)circleVec[2]*2;
                 Mat roiRGBa = mRGBa.submat(roi);
                 Mat roiHsv = new Mat();
                 Imgproc.cvtColor(roiRGBa, roiHsv, Imgproc.COLOR_RGB2HSV_FULL);
@@ -159,8 +154,8 @@ public class CameraFragment extends Fragment implements CvCameraViewListener2 {
                 if (0 < colorHsv.val[0] && colorHsv.val[0] < 20) {
                     Imgproc.circle(input, center, 3, new Scalar(255, 255, 255), 5);
                     Imgproc.circle(input, center, radius, new Scalar(255, 255, 255), 2);
+                    points.add(new Pair(center.x, center.y));
                 }
-
 
                 roiRGBa.release();
                 roiHsv.release();
@@ -171,4 +166,6 @@ public class CameraFragment extends Fragment implements CvCameraViewListener2 {
         input.release();
         return inputFrame.rgba();
     }
+
+
 }
