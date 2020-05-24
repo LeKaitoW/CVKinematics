@@ -25,6 +25,13 @@ public class StartFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        View opencv = view.findViewById(R.id.file_button);
+        opencv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((CameraStart)getActivity()).cameraStart();
+            }
+        });
         View camera = view.findViewById(R.id.camera_button);
         camera.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
