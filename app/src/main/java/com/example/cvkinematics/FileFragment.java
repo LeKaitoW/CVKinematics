@@ -4,16 +4,42 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import androidx.fragment.app.Fragment;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.videoio.VideoCapture;
+
 public class FileFragment extends Fragment {
 
     private Uri video = null;
+    private VideoCapture capture = null;
+    private String videoPath = "";
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(getActivity()) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS:
+                {
+                    Log.i("OpenCV", "OpenCV loaded successfully");
+                    capture = new VideoCapture();
+                } break;
+                default:
+                {
+                    super.onManagerConnected(status);
+                } break;
+            }
+        }
+    };
+
     public FileFragment() {
     }
 
@@ -31,6 +57,8 @@ public class FileFragment extends Fragment {
             VideoView videoField = getActivity().findViewById(R.id.videoView);
             videoField.setVideoURI(video);
             videoField.start();
+            videoPath = video.getPath();
+            ((TextView)getActivity().findViewById(R.id.video_path)).setText(videoPath);
         }
         View videoButton = view.findViewById(R.id.video_button);
         videoButton.setOnClickListener(new View.OnClickListener() {
@@ -39,6 +67,18 @@ public class FileFragment extends Fragment {
                 startActivityForResult(i, StartFragment.REQUEST_TAKE_GALLERY_VIDEO);
             }
         });
+    }
+
+    public void onResume()
+    {
+        super.onResume();
+        if (!OpenCVLoader.initDebug()) {
+            Log.d("OpenCV", "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, getActivity(), mLoaderCallback);
+        } else {
+            Log.d("OpenCV", "OpenCV library found inside package. Using it!");
+            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        }
     }
 
     @Override
@@ -59,5 +99,7 @@ public class FileFragment extends Fragment {
         fileFragment.setArguments(bundle);
         return fileFragment;
     }
+
+
 
 }

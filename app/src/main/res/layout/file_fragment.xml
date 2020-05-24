@@ -29,6 +29,12 @@
             android:layout_gravity="center_horizontal|center"
             android:text="Video" />
 
+        <TextView
+            android:id="@+id/video_path"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Path here" />
+
 
     </LinearLayout>
 </LinearLayout>
