@@ -1,8 +1,6 @@
 package com.example.cvkinematics;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -31,7 +29,7 @@ import java.util.ArrayList;
 
 public class CameraFragment extends Fragment implements CvCameraViewListener2 {
     private static final String  TAG              = "CameraFragment";
-    private ArrayList<Pair<Integer, Integer>> points = new ArrayList<Pair<Integer, Integer>>();
+    private ArrayList<Point> points = new ArrayList<Point>();
 
     private CameraBridgeViewBase mOpenCvCameraView;
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(getActivity()) {
@@ -73,7 +71,7 @@ public class CameraFragment extends Fragment implements CvCameraViewListener2 {
         View camera = view.findViewById(R.id.video_stop);
         camera.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                ((CameraStart)getActivity()).cameraStart();
+                ((CameraStart)getActivity()).getChart(points);
             }
         });
     }
@@ -154,7 +152,7 @@ public class CameraFragment extends Fragment implements CvCameraViewListener2 {
                 if (0 < colorHsv.val[0] && colorHsv.val[0] < 20) {
                     Imgproc.circle(input, center, 3, new Scalar(255, 255, 255), 5);
                     Imgproc.circle(input, center, radius, new Scalar(255, 255, 255), 2);
-                    points.add(new Pair(center.x, center.y));
+                    points.add(center);
                 }
 
                 roiRGBa.release();

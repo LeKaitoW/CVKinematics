@@ -3,7 +3,6 @@ package com.example.cvkinematics;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Pair;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements CameraStart, File
     }
 
     @Override
-    public void getChart(ArrayList<Pair<Integer, Integer>> points) {
+    public void getChart(ArrayList<Point> points) {
         getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.container,
                 ChartFragment.newInstance(points)).commit();
     }
